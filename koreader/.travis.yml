@@ -1,0 +1,34 @@
+language: c
+
+# sudo: false
+sudo: true
+dist: trusty
+
+compiler:
+  - gcc
+
+env:
+  - EMULATE_READER=1
+
+cache:
+  apt: true
+  directories:
+    - $HOME/.ccache
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
+      - libsdl1.2-dev
+      # for luasec
+      - libssl1.0.0
+      - nasm
+      # OpenSSL likes this (package contains makedepend)
+      - xutils-dev
+
+before_install: .ci/before_install.sh
+install: .ci/install.sh
+script: .ci/script.sh
+after_success: .ci/after_success.sh

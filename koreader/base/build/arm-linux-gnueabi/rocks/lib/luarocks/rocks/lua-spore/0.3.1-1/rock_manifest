@@ -1,0 +1,83 @@
+rock_manifest = {
+   bin = {
+      discovery2spore = "7c09736b04b45cde187de169f7e58c54",
+      wadl2spore = "31bba9e7487ad0652b8b8f6b518d7dc1"
+   },
+   doc = {},
+   lua = {
+      Spore = {
+         ['Core.lua'] = "fe7cfd67a838f29be6850bf0093831e5",
+         ['GoogleDiscovery.lua'] = "1ae43968141f1cb5e06b306f91986694",
+         Middleware = {
+            Auth = {
+               ['AWS.lua'] = "b7a5181df2e00f00d1c19b6ac5b39e1f",
+               ['Basic.lua'] = "2869f42c937605bfc71b38748eca7f95",
+               ['Bearer.lua'] = "e34e08fa5ed5f6d00410ca883ab942fa",
+               ['DataPublica.lua'] = "0568a7642109043059a5e54312de8720",
+               ['Digest.lua'] = "d94226465ed9abb6d3e53a4d5740724e",
+               ['OAuth.lua'] = "7b5fe59782a782c1ad58002aa293c4f8"
+            },
+            ['Cache.lua'] = "84b48c4f114e87a1490887bd70cd0c22",
+            ['DoNotTrack.lua'] = "c926765256398779f33e7b4cd66abc42",
+            Format = {
+               ['JSON.lua'] = "668e1a8e2140dc5ee7f8d55adddf1a59",
+               ['XML.lua'] = "9f2ee015f1f530fe5fe191cb1cdbcb80",
+               ['YAML.lua'] = "75d9c24738a5980a6c43148d35accc99"
+            },
+            ['Logging.lua'] = "9828156b64a60c8e9817df5c7ffe2f9e",
+            ['Mock.lua'] = "7c010aa9a7b21648413dc1dafca5951c",
+            Parameter = {
+               ['Default.lua'] = "9e226369cb1d61cbe7585b2aebbd1938",
+               ['Force.lua'] = "e0aa692d093c53e51e91f75d1386974b"
+            },
+            Proxy = {
+               ['Basic.lua'] = "1ded53deb6ea41d6882ea955f0c9095d"
+            },
+            ['Redirection.lua'] = "10585a6830e2083df52d8b671788b2f1",
+            ['Runtime.lua'] = "7380757b99e69d9a201e5bd4871d1dc4",
+            ['UserAgent.lua'] = "ff6c8fc2e6305ffa7faee3b66636c3f4"
+         },
+         ['Protocols.lua'] = "c59ada144ded76e955c69db77c878737",
+         ['Request.lua'] = "5fff880e0dcfd5fadc26ded7c64f45ad",
+         ['WADL.lua'] = "77aeaee1b4c03abaa8586fe3e09938f7",
+         ['XML.lua'] = "587ca1fff0fe795060aa9b69bad71e01"
+      },
+      ['Spore.lua'] = "88185fc017081e52a9ad0995be1ca582"
+   },
+   ['lua-spore-0.3.1-1.rockspec'] = "3da02831f30f025873aea4aae167fbbf",
+   test = {
+      ['00-require.t'] = "fe34bba5a0c4c0ca1ae8e4e03cd77fec",
+      ['01-request.t'] = "5b5d81d7c451f051e669588eabf599b7",
+      ['01-request6570.t'] = "8fec1ccb948d521aa9078c3949858e33",
+      ['02-new_from_string.t'] = "a00d285a176def23796be74036e96f45",
+      ['03-wrap.t'] = "a2c1d26860453fa5f06b073f2f840201",
+      ['04-enable.t'] = "b26750f2cbfbdf0430781df1a923da9b",
+      ['05-http_request.t'] = "7161fae2e2e2f2f40d7f2f854ecaffbb",
+      ['06-new_from_lua.t'] = "bca7f274f4ad03dfcede3a11c3a82e3b",
+      ['07-discovery.t'] = "1945c5314feb9f2f2ed24061bcfe929e",
+      ['08-wadl.t'] = "06b307879de4563c0dff7debcc853ade",
+      ['11-user_agent.t'] = "f67d08b4436fccfdc0b9666c0d0b7c97",
+      ['12-runtime.t'] = "36acd833b1e7d8b1d4ad61d62b2c313a",
+      ['13-logging.t'] = "5446e16cf9331f08497f8f69b09912c4",
+      ['14-redirection.t'] = "af7487b64805647817ff4cfe346b9cb1",
+      ['15-mock.t'] = "306361b75add046c05cb4430cf34d5c0",
+      ['16-cache.t'] = "8c9cd65d0ba4549cec2065ad5bdd279f",
+      ['17-do-not-track.t'] = "187efa5c10a219562115f0ed993ccea8",
+      ['21-auth_basic.t'] = "2abff0498cafc1efa3625f5cdc393957",
+      ['22-oauth.t'] = "93bbb8a23985d165d7dbb505a3b4f118",
+      ['23-aws.t'] = "581c5d2b0c1963eada8ae853cef04e3f",
+      ['24-bearer.t'] = "549b22dcbfd06cb3ad8e12ca31bf31da",
+      ['25-auth_digest.t'] = "63eb60702bbcb5078929696cdb14ac4e",
+      ['26-datapublica.t'] = "dc35080a048c419bb0f7a8b9be66cf80",
+      ['31-format_json.t'] = "f64f9ba4734b1008780d3040ac5ae592",
+      ['32-format_yaml.t'] = "d6b12474cd6c379da2418f54cf16545a",
+      ['33-format_to_xml.t'] = "5c0ebe8e61894a2fb81f4d287e1dda53",
+      ['33-format_xml.t'] = "c3eb7ed032a3c3ead6862510cc3cbec7",
+      ['34-format_xml.t'] = "d134908707365d7770e17f5d61617651",
+      ['41-proxy_basic.t'] = "91d4a10e20c4f92ac16779ccda7d2086",
+      ['42-proxy_redirect.t'] = "bb7e77cc05cdac19ecda0a78aab58218",
+      ['51-parameter_force.t'] = "16257cc698a5faa2bc0207c97f7429b0",
+      ['52-parameter_default.t'] = "429886bc763d89e9a5ebde7d0da75222",
+      ['api.json'] = "5ef06d6e6161e846aa8aac85f2f69550"
+   }
+}
