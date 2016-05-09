@@ -10,7 +10,7 @@ enable_language(C)
 assert_var_defined(HOSTCFLAGS)
 assert_var_defined(HOSTCC)
 assert_var_defined(OS)
-set(BUILD_CMD_GENERATE sh -c "env CFLAGS=\"${HOSTCFLAGS}\" $(MAKE) -j${PARALLEL_JOBS} generate build=\"release\" CC=\"${HOSTCC}\" verbose=1")
+set(BUILD_CMD_GENERATE sh -c "env CFLAGS=\"${HOSTCFLAGS}\" $(MAKE) -j${PARALLEL_JOBS} generate build=\"release\" DISXDRM=\"y\" CC=\"${HOSTCC}\" verbose=1")
 
 assert_var_defined(LDFLAGS)
 assert_var_defined(XCFLAGS)

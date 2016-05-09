@@ -22,6 +22,23 @@
 
 	#define  PDF_LOGI(fmt, ...)		do{	if(mupdf_g_client_dbglvl >= DEBUG_LEVEL_ERR ){CLIENT_LOG(PDF_LOG_TAG, fmt, __VA_ARGS__)};}while(0);
 	#define  PDF_LOGE(fmt, ...)		do{	if(mupdf_g_client_dbglvl >= DEBUG_LEVEL_LOG ){CLIENT_ERR(PDF_LOG_TAG, fmt, __VA_ARGS__)};}while(0);
+#elif defined(VER_KINDLE)
+	int app_print_open(char* logpath, int level);
+	void app_print_close();
+	void app_print_log(char* logbuffer);
+
+	extern char	mupdf_one_time_print_buffer[10240];
+	extern int	       mupdf_g_client_dbglvl;
+
+	#define 	DEBUG_LEVEL_NON	0
+	#define	DEBUG_LEVEL_ERR	1
+	#define	DEBUG_LEVEL_LOG	2
+
+	#define	CLIENT_ERR(title, fmt, ...) 	do{ sprintf(mupdf_one_time_print_buffer, "[%s][ERR]" fmt, title, __VA_ARGS__); app_print_log(mupdf_one_time_print_buffer);}while(0);
+	#define	CLIENT_LOG(title, fmt, ...) 	do{ sprintf(mupdf_one_time_print_buffer, "[%s][INFO]" fmt, title, __VA_ARGS__); app_print_log(mupdf_one_time_print_buffer);}while(0);
+
+	#define  PDF_LOGI(fmt, ...)		do{	if(mupdf_g_client_dbglvl >= DEBUG_LEVEL_ERR ){CLIENT_LOG(PDF_LOG_TAG, fmt, __VA_ARGS__)};}while(0);
+	#define  PDF_LOGE(fmt, ...)		do{	if(mupdf_g_client_dbglvl >= DEBUG_LEVEL_LOG ){CLIENT_ERR(PDF_LOG_TAG, fmt, __VA_ARGS__)};}while(0);
 #elif defined(__ANDROID__)
 	#include <android/log.h>
 	//#define LOG_TAG "libmupdf"

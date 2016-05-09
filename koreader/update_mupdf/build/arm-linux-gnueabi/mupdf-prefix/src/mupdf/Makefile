@@ -15,12 +15,13 @@ include Makethird
 # Do not specify CFLAGS or LIBS on the make invocation line - specify
 # XCFLAGS or XLIBS instead. Make ignores any lines in the makefile that
 # set a variable that was set on the command line.
-CFLAGS += $(XCFLAGS) -Iinclude -I$(GEN) -Larmlinux/ -Lx86/
-LIBS += $(XLIBS) -lm -lxdrm_client -Larmlinux/ -Lx86/
+CFLAGS += $(XCFLAGS) -Iinclude -I$(GEN) -Larmlinux/ -Lx86/ -Lx64/
+LIBS += $(XLIBS) -lm -lxdrm_client -Larmlinux/ -Lx86/ -Lx64/
 
 ifeq "$(DISXDRM)" "y"
 else
 CFLAGS += -DENABLE_XDRM
+CFLAGS += -DVER_KINDLE
 endif
 THIRD_LIBS += $(FREETYPE_LIB)
 THIRD_LIBS += $(JBIG2DEC_LIB)

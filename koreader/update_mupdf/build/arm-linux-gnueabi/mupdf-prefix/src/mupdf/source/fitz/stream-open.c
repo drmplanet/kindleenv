@@ -12,7 +12,7 @@
 #include "xDrmClient.h"
 #include "xDrmErrorCode.h"
 
-#define READ_MAX_CACHE_SIZE				(128*1024)
+#define READ_MAX_CACHE_SIZE				(64*1024)
 #define READ_MAX_HALF_CACHE_SIZE			(READ_MAX_CACHE_SIZE>>2)
 
 fz_stream *
@@ -122,8 +122,8 @@ static int next_file(fz_context *ctx, fz_stream *stm, int n)
 		if(sizeof(state->buffer)  < READ_MAX_CACHE_SIZE)
 		{
 			copylen = sizeof(state->buffer) > (state->filelen - state->fileoffset) ? (state->filelen - state->fileoffset) : sizeof(state->buffer);
-			PDF_LOGI("fileoffset[%d], recordfilepos[%d], copylen[%d], cachelen[%d], right_cachelen[%d], left_cachelen[%d]\n", 
-														state->fileoffset, state->recordfilepos, copylen, state->cachelen, state->right_cachelen, state->left_cachelen);
+			//PDF_LOGI("fileoffset[%d], recordfilepos[%d], copylen[%d], cachelen[%d], right_cachelen[%d], left_cachelen[%d]\n", 
+														//state->fileoffset, state->recordfilepos, copylen, state->cachelen, state->right_cachelen, state->left_cachelen);
 			//if(!((state->fileoffset >= state->recordfilepos) && (state->fileoffset + copylen <= state->recordfilepos + state->cachelen)))
 			if( ( (state->fileoffset >= state->recordfilepos) && (state->fileoffset + copylen > state->recordfilepos + state->right_cachelen) ) ||
 				( (state->fileoffset < state->recordfilepos) && (state->recordfilepos - state->fileoffset > state->left_cachelen))  ||
@@ -162,7 +162,7 @@ static int next_file(fz_context *ctx, fz_stream *stm, int n)
 					state->recordfilepos = state->fileoffset;
 
 					//PDF_LOGI("[czb]left_cachelen[%d], right_cachelen[%d], recordfilepos[%d]\n", state->left_cachelen, state->right_cachelen, state->recordfilepos);
-					PDF_LOGI("[%s]Call xDrm_DecryptCommonFile success!!read len = %d\n", __FUNCTION__, n);
+					//PDF_LOGI("[%s]Call xDrm_DecryptCommonFile success!!read len = %d\n", __FUNCTION__, n);
 				}
 			}
 
@@ -267,7 +267,7 @@ static void seek_file(fz_context *ctx, fz_stream *stm, fz_off_t offset, int when
 #endif
 	}
 
-	PDF_LOGI("[%s]===>seek to pos:%d\n", __FUNCTION__, stm->pos);
+	//PDF_LOGI("[%s]===>seek to pos:%d\n", __FUNCTION__, stm->pos);
 }
 
 static void close_file(fz_context *ctx, void *state_)
@@ -284,10 +284,18 @@ static void close_file(fz_context *ctx, void *state_)
 	else
 	{
 #ifdef ENABLE_XDRM
-		if(state->file){free((drmcontex*)state->file); state->file = 0;}
+		if(state->file)
+		{
+			xDrm_CleanAllLicense((drmcontex*)state->file);
+			xDrm_Close((drmcontex*)state->file);
+			free((drmcontex*)state->file); state->file = 0;
+		}
 		if(state->cache){free(state->cache); state->cache = NULL;state->cachelen = 0;}
-		n = 1;
-		PDF_LOGI("[%s]close enc file succe!!\n", __FUNCTION__);
+		n = 0;
+		PDF_LOGI("[%s]close enc file suc!!\n", __FUNCTION__);
+		#ifdef VER_KINDLE
+			app_print_close();
+		#endif
 #endif
 	}
 	if (n < 0)
@@ -369,6 +377,9 @@ fz_open_file(fz_context *ctx, const char *name)
 	DRM_PTR 	fd = 0;
 	int 			ret = 0;
 #ifdef ENABLE_XDRM
+	#ifdef VER_KINDLE
+		app_print_open("/mnt/us/KReader/xdrm/data/mupdf.log", DEBUG_LEVEL_LOG);
+	#endif
 	bool encflag = xDrm_IsCommonFileEncrypted((char*)name);
 	drmcontex* handle = NULL;
 #else
@@ -377,7 +388,7 @@ fz_open_file(fz_context *ctx, const char *name)
 	PDF_LOGI("[%s]file path is %s, encflag=%d\n", __FUNCTION__, name, encflag);
 	if(!encflag)
 	{
-		PDF_LOGI("------->This is clr pdf\n");
+		PDF_LOGI("------->This is clr pdf\n", __FUNCTION__);
 	#if defined(_WIN32) || defined(_WIN64)
 		f = fopen(name, "rb");
 	#else
@@ -389,7 +400,7 @@ fz_open_file(fz_context *ctx, const char *name)
 	else
 	{
 	#ifdef ENABLE_XDRM
-        	PDF_LOGI("------->This is encrypted pdf\n");
+        	PDF_LOGI("[%s]------->This is encrypted pdf\n", __FUNCTION__);
 		handle = malloc(sizeof(drmcontex));
 		ret = xDrm_Init_ex(handle, 1);
               if(ret)
