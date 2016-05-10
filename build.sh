@@ -1,16 +1,16 @@
-if [ -f base3rd.tgz ];then
+if [ -f base3rd.tgz ] || [ -f _patched_ ];then
 echo " "
 else
-echo "0. get patch zip file"
-cat patch/base3rd.tgz* > base3rd.tgz
 
 echo "1. patching............"
 cd koreader
-tar zxvf ../base3rd.tgz
+cat ../patch/base3rd.tgz* | tar -zxv
+cd ..
 fi
 
 
 
 echo "2. build koreader.zip"
+cd koreader
 ./kodev release kindle
 
