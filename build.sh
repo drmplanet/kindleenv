@@ -1,7 +1,7 @@
 if [ -f base3rd.tgz ] || [ -f _patched_ ];then
 echo " "
 else
-
+touch _patched_
 echo "1. patching............"
 cd koreader
 cat ../patch/base3rd.tgz* | tar -zxv
