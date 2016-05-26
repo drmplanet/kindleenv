@@ -309,10 +309,21 @@ fz_open_file_ptr(fz_context *ctx, DRM_PTR file, char* filename)
 	fz_stream *stm;
 	fz_file_stream *state = fz_malloc_struct(ctx, fz_file_stream);
 	state->file = file;
+	bool isepub = false;
+	if (strstr(filename, ".epub") != NULL)
+		isepub = true;
 #ifdef ENABLE_XDRM
-	state->filelen = xDrm_GetCommonFileSize((drmcontex *)file, filename);
-	state->encrypted = xDrm_IsCommonFileEncrypted(filename);
-	PDF_LOGI("[%s]==>file len is %d\n", __FUNCTION__, state->filelen);
+	if (!isepub)
+	{
+		state->filelen = xDrm_GetCommonFileSize((drmcontex *)file, filename);
+		state->encrypted = xDrm_IsCommonFileEncrypted(filename);
+		PDF_LOGI("[%s]==>file len is %d\n", __FUNCTION__, state->filelen);
+	}
+	else
+	{
+		state->filelen = 0;
+		state->encrypted = false;
+	}
 #else
 	state->filelen = 0;
 	state->encrypted = false;
@@ -376,11 +387,21 @@ fz_open_file(fz_context *ctx, const char *name)
     	FILE*		f = NULL;
 	DRM_PTR 	fd = 0;
 	int 			ret = 0;
+	char		filepath[1024];
+	char*		fname = (char*)name;
+	unsigned int flen = 1024;
+	memset(filepath, 0x00, sizeof(filepath));
 #ifdef ENABLE_XDRM
 	#ifdef VER_KINDLE
 		app_print_open("/mnt/us/KReader/xdrm/data/mupdf.log", DEBUG_LEVEL_LOG);
 	#endif
-	bool encflag = xDrm_IsCommonFileEncrypted((char*)name);
+	bool encflag = xDrm_IsBookEncrypted((char*)name);
+	bool isepub = false;
+	if (strstr(name, ".epub") != NULL)
+	{
+		PDF_LOGI("[%s]this is epub\n", __FUNCTION__);
+		isepub = true;
+	}
 	drmcontex* handle = NULL;
 #else
 	bool encflag = false;
@@ -388,7 +409,7 @@ fz_open_file(fz_context *ctx, const char *name)
 	PDF_LOGI("[%s]file path is %s, encflag=%d\n", __FUNCTION__, name, encflag);
 	if(!encflag)
 	{
-		PDF_LOGI("------->This is clr pdf\n", __FUNCTION__);
+		PDF_LOGI("------->This is clr book\n", __FUNCTION__);
 	#if defined(_WIN32) || defined(_WIN64)
 		f = fopen(name, "rb");
 	#else
@@ -429,6 +450,30 @@ fz_open_file(fz_context *ctx, const char *name)
 		else
 		{
 			fd = (DRM_PTR)handle;
+		}
+		//if epub book decrypt it as clear file
+		if (isepub)
+		{
+			ret = xDrm_DecryptWholeEpub(handle, filepath, &flen);
+			if (ret)
+			{//failed case
+				fd = -1;
+				goto out;
+			}
+			else
+			{
+#if defined(_WIN32) || defined(_WIN64)
+				f = fopen(filepath, "rb");
+#else
+				f = fz_fopen(filepath, "rb");
+#endif
+				fd = (DRM_PTR)f;
+				PDF_LOGI("after dec whole file name is %s, fd = %ld\n", filepath, fd);
+				//close the drm
+				xDrm_CleanAllLicense(handle);
+				xDrm_Close(handle);
+				free(handle);
+			}
 		}
 	#endif
 	}
